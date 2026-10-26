@@ -243,16 +243,34 @@
       }
       const bytes = new Uint8Array(await blob.arrayBuffer());
       const out = PngTools.setPhys(bytes, ppm);
-      const url = URL.createObjectURL(new Blob([out], { type: 'image/png' }));
-      const a = document.createElement('a');
       const kind = cfg.mode === 'grid' ? 'karopapier' : (cfg.functions.some((f) => f.compiled) ? 'funktionsgraph' : 'koordinatensystem');
-      a.href = url;
-      a.download = kind + '_' + fmt(size.w) + 'x' + fmt(size.h) + 'cm.png';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      saveFile(new Blob([out], { type: 'image/png' }), kind + '_' + fmt(size.w) + 'x' + fmt(size.h) + 'cm.png');
     }, 'image/png');
+  }
+
+  // Als Claude-Artifact darf die Seite nicht selbst herunterladen, dort läuft das Speichern über "downloads".
+  const downloadsReady = window.claude && typeof window.claude.use === 'function'
+    ? window.claude.use('downloads').catch(() => null)
+    : Promise.resolve(null);
+
+  async function saveFile(blob, filename) {
+    const downloads = await downloadsReady;
+    if (downloads) {
+      try {
+        await downloads.save({ filename, data: blob });
+      } catch (e) {
+        if (e && e.code !== 'declined') $('exportError').textContent = 'Speichern nicht möglich: ' + (e.message || e.code);
+      }
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
   // ---------- Speichern / Laden ----------

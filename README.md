@@ -49,3 +49,9 @@ Aufbau:
 - `js/render.js` – Zeichnen auf ein Canvas, alle Maße in cm
 - `js/png.js` – schreibt die Auflösung in die PNG-Datei
 - `js/app.js` – Bedienoberfläche, Vorschau, Export
+
+Einzeldatei mit allem CSS/JS erzeugen (z. B. zum Weitergeben oder für Tablets):
+
+```
+node tools/bundle.js mathgraf.html
+```
