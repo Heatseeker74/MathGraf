@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MathGraf</title>
+  <meta name="description" content="Koordinatensysteme, Karopapier und Funktionsgraphen als maßstabsgetreue PNG-Bilder für Word erstellen.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>MathGraf</h1>
+    <p class="tagline">Koordinatensysteme, Karopapier und Funktionsgraphen als maßstabsgetreues PNG für Word</p>
+  </header>
+
+  <main class="layout">
+    <aside class="panel" id="settings">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" class="tab active" data-mode="coord" aria-selected="true">Koordinatensystem</button>
+        <button type="button" role="tab" class="tab" data-mode="grid" aria-selected="false">Karopapier</button>
+      </div>
+
+      <!-- Karopapier -->
+      <section class="group mode-grid" hidden>
+        <h2>Blattgröße</h2>
+        <div class="presets">
+          <button type="button" data-paper="16,24.5">A4 (16 × 24,5 cm)</button>
+          <button type="button" data-paper="16,12">½ A4 (16 × 12 cm)</button>
+          <button type="button" data-paper="16,6">Streifen (16 × 6 cm)</button>
+        </div>
+        <div class="row">
+          <label>Breite (cm)<input type="number" id="paperWidth" value="16" min="0.5" max="100" step="0.5"></label>
+          <label>Höhe (cm)<input type="number" id="paperHeight" value="10" min="0.5" max="100" step="0.5"></label>
+        </div>
+        <label class="check"><input type="checkbox" id="paperCenter"> Raster mittig ausrichten</label>
+        <label class="check"><input type="checkbox" id="paperFrame"> Rahmen zeichnen</label>
+      </section>
+
+      <!-- Koordinatensystem -->
+      <section class="group mode-coord">
+        <h2>Bereich</h2>
+        <div class="row">
+          <label>x von<input type="number" id="xMin" value="-6" step="1"></label>
+          <label>x bis<input type="number" id="xMax" value="6" step="1"></label>
+        </div>
+        <div class="row">
+          <label>y von<input type="number" id="yMin" value="-4" step="1"></label>
+          <label>y bis<input type="number" id="yMax" value="4" step="1"></label>
+        </div>
+        <div class="row">
+          <label>1 Einheit x (cm)<input type="number" id="unitX" value="1" min="0.05" step="0.5"></label>
+          <label>1 Einheit y (cm)<input type="number" id="unitY" value="1" min="0.05" step="0.5"></label>
+        </div>
+        <div class="row">
+          <label>Beschriftung x alle<input type="number" id="stepX" value="1" min="0" step="1"></label>
+          <label>Beschriftung y alle<input type="number" id="stepY" value="1" min="0" step="1"></label>
+        </div>
+        <div class="row">
+          <label>Rand (cm)<input type="number" id="margin" value="1" min="0" step="0.5"></label>
+          <label>Achsenüberstand (cm)<input type="number" id="overhang" value="0.5" min="0" step="0.25"></label>
+        </div>
+      </section>
+
+      <section class="group mode-coord">
+        <h2>Achsen</h2>
+        <div class="row">
+          <label>Name x-Achse<input type="text" id="labelX" value="x"></label>
+          <label>Name y-Achse<input type="text" id="labelY" value="y"></label>
+        </div>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="showAxes" checked> Achsen</label>
+          <label class="check"><input type="checkbox" id="arrows" checked> Pfeile</label>
+          <label class="check"><input type="checkbox" id="showTicks" checked> Skalenstriche</label>
+          <label class="check"><input type="checkbox" id="showNumbers" checked> Zahlen</label>
+          <label class="check"><input type="checkbox" id="showOrigin" checked> 0 am Ursprung</label>
+          <label class="check"><input type="checkbox" id="decimalComma" checked> Dezimalkomma</label>
+          <label class="check"><input type="checkbox" id="labelHalo" checked> Zahlen freistellen</label>
+        </div>
+        <div class="row">
+          <label>Achsenstärke (mm)<input type="number" id="axisWidth" value="0.3" min="0.05" step="0.05"></label>
+          <label>Achsenfarbe<input type="color" id="axisColor" value="#000000"></label>
+        </div>
+        <div class="row">
+          <label>Schriftgröße (pt)<input type="number" id="fontSize" value="10" min="4" max="40" step="1"></label>
+          <label>Schriftart
+            <select id="fontFamily">
+              <option value="Arial, Helvetica, sans-serif">Arial</option>
+              <option value="Calibri, Carlito, sans-serif">Calibri</option>
+              <option value="'Times New Roman', Times, serif">Times New Roman</option>
+              <option value="Cambria, Caladea, serif">Cambria</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Karos</h2>
+        <div class="presets">
+          <button type="button" data-grid="0.5,0,#a0a0a0,0.1">Karo 5 mm</button>
+          <button type="button" data-grid="1,0,#a0a0a0,0.1">Karo 1 cm</button>
+          <button type="button" data-grid="0.1,10,#f2b27a,0.05,#e07020,0.15">Millimeterpapier</button>
+        </div>
+        <label class="check"><input type="checkbox" id="gridShow" checked> Karos anzeigen</label>
+        <label class="check mode-coord"><input type="checkbox" id="gridOnlyInside"> Karos nur im Achsenbereich</label>
+        <div class="row">
+          <label>Kästchengröße (cm)<input type="number" id="gridSize" value="0.5" min="0.05" step="0.05"></label>
+          <label>Linienstärke (mm)<input type="number" id="gridWidth" value="0.1" min="0.01" step="0.05"></label>
+        </div>
+        <div class="row">
+          <label>Linienfarbe<input type="color" id="gridColor" value="#a0a0a0"></label>
+          <label>Hauptlinie alle … Kästchen<input type="number" id="majorEvery" value="0" min="0" step="1"></label>
+        </div>
+        <div class="row">
+          <label>Hauptlinienfarbe<input type="color" id="majorColor" value="#707070"></label>
+          <label>Hauptlinienstärke (mm)<input type="number" id="majorWidth" value="0.2" min="0.01" step="0.05"></label>
+        </div>
+      </section>
+
+      <section class="group mode-coord">
+        <h2>Funktionen</h2>
+        <div id="functionList"></div>
+        <button type="button" id="addFunction" class="secondary">+ Funktion hinzufügen</button>
+        <details class="hint">
+          <summary>Schreibweise</summary>
+          <p>Beispiele: <code>0,5x^2 - 2</code>, <code>f(x) = 2sin(x)</code>, <code>sqrt(x+4)</code>, <code>|x| - 1</code>, <code>e^(-x)</code>, <code>1/x</code></p>
+          <p>Funktionen: sin, cos, tan, arcsin, arccos, arctan, sqrt, abs, ln, lg/log, exp, floor, round, sgn, root(x; n), logb(b; x), min, max.
+            Konstanten: pi (π), e. Winkel im Bogenmaß. Mehrere Argumente mit <code>;</code> trennen.</p>
+        </details>
+      </section>
+
+      <section class="group mode-coord">
+        <h2>Punkte</h2>
+        <textarea id="points" rows="2" placeholder="A(1|2)  B(-3|0,5)  C(pi|0)"></textarea>
+        <div class="row">
+          <label>Darstellung
+            <select id="pointStyle">
+              <option value="dot">Punkt ●</option>
+              <option value="cross">Kreuz ×</option>
+            </select>
+          </label>
+          <label>Farbe<input type="color" id="pointColor" value="#000000"></label>
+        </div>
+        <p class="error" id="pointsError"></p>
+      </section>
+    </aside>
+
+    <section class="preview-area">
+      <div class="export-bar">
+        <div class="size-info">
+          <span>Bildgröße: <strong id="sizeInfo">–</strong></span>
+          <span class="muted" id="pixelInfo"></span>
+        </div>
+        <div class="export-controls">
+          <label>Auflösung
+            <select id="dpi">
+              <option value="150">150 dpi</option>
+              <option value="300" selected>300 dpi</option>
+              <option value="600">600 dpi</option>
+            </select>
+          </label>
+          <label>Hintergrund
+            <select id="background">
+              <option value="white">weiß</option>
+              <option value="transparent">transparent</option>
+            </select>
+          </label>
+          <button type="button" id="download" class="primary">PNG herunterladen</button>
+        </div>
+      </div>
+      <p class="error" id="exportError"></p>
+
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="preview" aria-label="Vorschau"></canvas>
+      </div>
+
+      <details class="help" open>
+        <summary>So kommt das Bild maßstabsgetreu nach Word</summary>
+        <ol>
+          <li><strong>PNG herunterladen.</strong> Die Datei enthält die Auflösung, Word kennt damit die Größe in cm.</li>
+          <li>In Word über <em>Einfügen → Bilder → Dieses Gerät…</em> einfügen. Nicht über die Zwischenablage kopieren:
+            Dabei geht die Auflösung verloren und das Bild landet in falscher Größe im Dokument.</li>
+          <li>Prüfen: Rechtsklick aufs Bild → <em>Größe und Position</em>. Die Skalierung muss bei <strong>100 %</strong> stehen,
+            Höhe und Breite entsprechen der angezeigten Bildgröße.</li>
+          <li>Wurde das Bild verkleinert, dort auf <em>Zurücksetzen</em> klicken. Ist es breiter als der Satzspiegel, verkleinert Word es automatisch.
+            Dann die Seitenränder verringern oder ein kleineres Bild erzeugen.</li>
+          <li>Beim Drucken auf <em>Tatsächliche Größe</em> bzw. 100 % achten (nicht „An Seite anpassen“).</li>
+        </ol>
+        <p class="muted">Tipp: Damit Word die Bilder nicht herunterrechnet, unter <em>Datei → Optionen → Erweitert</em>
+          „Bilder in Datei nicht komprimieren“ aktivieren. Das ändert nur die Schärfe, die Größe in cm bleibt immer erhalten.</p>
+      </details>
+    </section>
+  </main>
+
+  <template id="functionTemplate">
+    <div class="fn">
+      <div class="fn-main">
+        <input type="color" class="fn-color" title="Farbe">
+        <input type="text" class="fn-expr" placeholder="f(x) = 0,5x^2 - 2" spellcheck="false" autocomplete="off">
+        <button type="button" class="fn-remove icon" title="Entfernen" aria-label="Funktion entfernen">✕</button>
+      </div>
+      <div class="fn-opts">
+        <label>Stärke (mm)<input type="number" class="fn-width" value="0.4" min="0.05" step="0.05"></label>
+        <label>Linie
+          <select class="fn-style">
+            <option value="solid">durchgezogen</option>
+            <option value="dashed">gestrichelt</option>
+            <option value="dotted">gepunktet</option>
+          </select>
+        </label>
+        <label>von x<input type="text" class="fn-from" placeholder="–"></label>
+        <label>bis x<input type="text" class="fn-to" placeholder="–"></label>
+        <label>Name<input type="text" class="fn-label" placeholder="f"></label>
+      </div>
+      <p class="error fn-error"></p>
+    </div>
+  </template>
+
+  <script src="js/parser.js"></script>
+  <script src="js/png.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
